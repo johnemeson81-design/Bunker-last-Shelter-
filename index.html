@@ -180,7 +180,23 @@ Skill: Can make basic medicines
 Skill: Can fix a water pump
 Item: Binoculars
 Item: Camping stove
-Secret: Knows where fuel is stored</textarea>
+Secret: Knows where fuel is stored
+Item: Time Machine
+Item: Memory Eraser
+Item: Teleportation Device
+Item: Clone Machine
+Item: Mind-Reading Helmet
+Item: Infinite Battery
+Item: Infinite Food Supply
+Item: Anti-Gravity Boots
+Secret: Can Predict Death
+Secret: Fake Doctor
+Secret: Secret Immortality
+Secret: Owns an Underground Bank
+Secret: Has $100 Million in Cash
+Secret: Never Paid Taxes
+Secret: Can Predict Stock Market Crashes
+Secret: Liar</textarea>
 <div class="row">
 <button class="primary" id="dealBtn">Shuffle & deal cards</button>
 <button class="secondary" id="resetBtn">Reset game</button>
@@ -204,6 +220,22 @@ Secret: Knows where fuel is stored</textarea>
 <script>
 const $ = id => document.getElementById(id);
 let dealt = [];
+
+const CARD_LIST_STORAGE_KEY = 'bunker-last-shelter-card-list-v1';
+const defaultCardList = $('cardList').value;
+try {
+  const savedCardList = localStorage.getItem(CARD_LIST_STORAGE_KEY);
+  if (savedCardList !== null) $('cardList').value = savedCardList;
+} catch (e) {}
+
+$('cardList').addEventListener('input', () => {
+  try {
+    localStorage.setItem(CARD_LIST_STORAGE_KEY, $('cardList').value);
+    $('status').textContent = 'Card list saved on this device.';
+  } catch (e) {
+    $('status').textContent = 'Could not save automatically in this browser. Use Copy card list as backup.';
+  }
+});
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, ch => ({
