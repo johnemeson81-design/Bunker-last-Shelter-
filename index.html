@@ -1,1 +1,297 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bunker: Last Shelter</title>
+<style>
+:root {
+  color-scheme: dark;
+  --gold: #d8a85d;
+  --green: #193b35;
+  --bg: #101a19;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #edf2e9;
+  font-family: Arial, sans-serif;
+}
+.hero {
+  background: var(--green);
+  padding: 32px 20px;
+  border-bottom: 3px solid var(--gold);
+}
+header, main { max-width: 1000px; margin: auto; }
+.kicker {
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+h1 { font-size: clamp(30px, 6vw, 48px); margin: 14px 0; }
+p { line-height: 1.6; }
+main { padding: 22px 16px 50px; }
+.panel {
+  background: #182624;
+  border: 1px solid #344943;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+h2 { margin-top: 0; }
+.sub, .note { color: #aebfb6; font-size: 14px; }
+.settings {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+label { display: block; margin-bottom: 7px; font-size: 13px; }
+select, textarea, button {
+  font: inherit;
+  border-radius: 8px;
+  padding: 11px;
+}
+select, textarea {
+  width: 100%;
+  background: #101a19;
+  color: white;
+  border: 1px solid #435a50;
+}
+textarea { min-height: 200px; margin-top: 8px; }
+button { border: 0; font-weight: bold; cursor: pointer; }
+.primary { background: var(--gold); color: #1c211d; }
+.secondary { background: #263c36; color: white; border: 1px solid #4b665b; }
+.row { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 12px; }
+.players { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.player { background: #12201d; border: 1px solid #3b5148; border-radius: 12px; padding: 13px; min-width: 0; }
+.player-head { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.player-head h3 { margin: 0; }
+.count { color: var(--gold); font-size: 12px; }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.card {
+  background: #e9e4d6;
+  color: #1a2a25;
+  border-radius: 8px;
+  padding: 11px;
+  min-height: 105px;
+  overflow-wrap: anywhere;
+}
+.type { color: #6a6b54; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+.name { font-weight: bold; margin-top: 9px; line-height: 1.3; }
+.num { font-size: 10px; margin-top: 10px; color: #626b60; }
+.hidden-card { background: #213b33; color: white; text-align: center; border: 1px solid #4c6a5d; }
+.hidden-card .type { color: var(--gold); }
+.reveal-btn { width: 100%; margin-top: 10px; }
+.status { color: #d8a85d; margin-top: 12px; font-size: 14px; }
+.empty { border: 1px dashed #4b6559; border-radius: 10px; padding: 22px; text-align: center; color: #b7c8bd; }
+@media(max-width:650px) {
+  .settings, .players { grid-template-columns: 1fr; }
+  .panel { padding: 14px; }
+}
+</style>
+</head>
+<body>
+<div class="hero">
+<header>
+  <div class="kicker">Survival simulation · Team challenge</div>
+  <h1>BUNKER: LAST SHELTER</h1>
+  <p>The world outside has become dangerous. Your team has limited space in the bunker. Reveal your cards, make your case, and convince the group why you deserve to survive.</p>
+</header>
+</div>
+<main>
+<section class="panel">
+<h2>01 / Set up the game</h2>
+<p class="sub">Choose your players and cards. You can edit the card list below.</p>
+<div class="settings">
+<div>
+<label for="playerCount">Players</label>
+<select id="playerCount">
+<option value="8" selected>8 players</option>
+<option value="10">10 players</option>
+</select>
+</div>
+<div>
+<label for="cardsPerPlayer">Cards per player</label>
+<select id="cardsPerPlayer">
+<option value="4">4 cards</option>
+<option value="5" selected>5 cards</option>
+</select>
+</div>
+<div>
+<label for="revealMode">Card display</label>
+<select id="revealMode">
+<option value="hidden" selected>Hidden until revealed</option>
+<option value="open">Show all cards</option>
+</select>
+</div>
+</div>
+<label for="cardList" style="margin-top:16px">Cards — one per line (Category: Card name)</label>
+<textarea id="cardList" spellcheck="false">Profession: Emergency doctor
+Profession: Electrician
+Profession: Farmer
+Profession: Mechanic
+Profession: Teacher
+Profession: Chef
+Profession: Engineer
+Profession: Firefighter
+Profession: Pilot
+Profession: Psychologist
+Health: Healthy
+Health: One broken arm
+Health: Needs daily medication
+Health: Excellent physical condition
+Health: Weak immune system
+Health: Can survive extreme cold
+Skill: Can repair generators
+Skill: Knows how to grow food
+Skill: Can perform first aid
+Skill: Can purify water
+Skill: Can build traps
+Skill: Can repair radios
+Skill: Excellent negotiator
+Skill: Can navigate without GPS
+Item: First-aid kit
+Item: Seeds and gardening tools
+Item: Portable radio
+Item: Water filter
+Item: Solar charger
+Item: Toolbox
+Item: Warm sleeping bag
+Item: Box of canned food
+Secret: Knows a safe route outside
+Secret: Has a hidden food supply
+Secret: Afraid of enclosed spaces
+Secret: Can speak five languages
+Secret: Used to work for the government
+Secret: Knows a bunker entrance code
+Secret: Hid important information
+Secret: Has a map of an abandoned town
+Profession: Veterinarian
+Profession: Carpenter
+Profession: Scientist
+Profession: Security guard
+Health: Insomnia
+Health: Excellent eyesight
+Skill: Can make basic medicines
+Skill: Can fix a water pump
+Item: Binoculars
+Item: Camping stove
+Secret: Knows where fuel is stored</textarea>
+<div class="row">
+<button class="primary" id="dealBtn">Shuffle & deal cards</button>
+<button class="secondary" id="resetBtn">Reset game</button>
+<button class="secondary" id="copyBtn">Copy card list</button>
+</div>
+<div class="status" id="status" aria-live="polite">Ready. Shuffle the cards to begin.</div>
+</section>
+
+<section class="panel">
+<h2>02 / Players' cards</h2>
+<p class="sub">Pass one device to each player. Each player should reveal their cards only on their turn.</p>
+<div id="playerArea" class="empty">No cards dealt yet. Press “Shuffle & deal cards.”</div>
+</section>
+
+<section class="panel">
+<h2>03 / Debate & vote</h2>
+<p>Defend your character and explain why you deserve a place in the bunker.</p>
+<p class="note">Teacher tip: Decide how many people can enter the bunker before the debate starts. Players should defend their character respectfully.</p>
+</section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let dealt = [];
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[ch]));
+}
+
+function parseCards() {
+  return $('cardList').value.split(/\n/).map(s => s.trim()).filter(Boolean).map((line, i) => {
+    const split = line.indexOf(':');
+    return split > -1
+      ? {type: line.slice(0, split).trim() || 'Card', name: line.slice(split + 1).trim() || line, id: i}
+      : {type:'Card', name:line, id:i};
+  });
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function deal() {
+  const cards = parseCards();
+  const count = Number($('playerCount').value);
+  const perPlayer = Number($('cardsPerPlayer').value);
+  if (cards.length < count * perPlayer) {
+    $('status').textContent = `Need ${count * perPlayer} cards. Currently available: ${cards.length}.`;
+    return;
+  }
+  const deck = shuffle(cards).slice(0, count * perPlayer);
+  dealt = Array.from({length: count}, (_, i) => ({
+    name: `Player ${i + 1}`,
+    cards: deck.slice(i * perPlayer, (i + 1) * perPlayer),
+    revealed: false
+  }));
+  $('status').textContent = `Dealt ${count * perPlayer} unique cards to ${count} players.`;
+  renderPlayers();
+}
+
+function renderPlayers() {
+  if (!dealt.length) {
+    $('playerArea').className = 'empty';
+    $('playerArea').textContent = 'No cards dealt yet. Press “Shuffle & deal cards.”';
+    return;
+  }
+  $('playerArea').className = 'players';
+  const open = $('revealMode').value === 'open';
+  $('playerArea').innerHTML = dealt.map((p, pi) => {
+    const shown = open || p.revealed;
+    return `<article class="player">
+      <div class="player-head"><h3>${p.name}</h3><span class="count">${p.cards.length} CARDS</span></div>
+      <div class="cards">${p.cards.map((c, ci) => shown
+        ? `<div class="card"><div class="type">${escapeHtml(c.type)}</div><div class="name">${escapeHtml(c.name)}</div><div class="num">CARD ${ci+1}</div></div>`
+        : `<div class="card hidden-card"><div class="type">CONFIDENTIAL</div><div class="name">?</div><div class="num">CARD ${ci+1}</div></div>`
+      ).join('')}</div>
+      ${open ? '' : `<button class="secondary reveal-btn" data-player="${pi}">${p.revealed ? 'Hide my cards' : 'Reveal my cards'}</button>`}
+    </article>`;
+  }).join('');
+
+  document.querySelectorAll('.reveal-btn').forEach(btn => btn.addEventListener('click', () => {
+    const p = dealt[Number(btn.dataset.player)];
+    p.revealed = !p.revealed;
+    renderPlayers();
+  }));
+}
+
+$('dealBtn').addEventListener('click', deal);
+$('resetBtn').addEventListener('click', () => {
+  dealt = [];
+  renderPlayers();
+  $('status').textContent = 'Game reset. Ready for a new round.';
+});
+$('revealMode').addEventListener('change', renderPlayers);
+$('copyBtn').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText($('cardList').value);
+    $('status').textContent = 'Card list copied.';
+  } catch (e) {
+    $('cardList').focus();
+    $('cardList').select();
+    $('status').textContent = 'Card list selected. Press Ctrl+C to copy.';
+  }
+});
+</script>
+</body>
+</html>
+
