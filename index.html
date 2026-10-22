@@ -246,7 +246,7 @@ function deal() {
   }
   dealt = Array.from({length: count}, (_, i) => ({
     name: `Player ${i + 1}`,
-    cards: categories.map(type => pools[type][i]),
+    cards: categories.map(type => pools[type][i % pools[type].length]),
     revealed: false
   }));
   $('status').textContent = `Each player has 1 Profession, 1 Health, 1 Skill, 1 Item, and 1 Secret. Each category card is unique across players in this round.`;
