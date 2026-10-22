@@ -233,17 +233,23 @@ function deal() {
   const cards = parseCards();
   const count = Number($('playerCount').value);
   const perPlayer = Number($('cardsPerPlayer').value);
-  if (cards.length < count * perPlayer) {
-    $('status').textContent = `Need ${count * perPlayer} cards. Currently available: ${cards.length}.`;
+  const categories = ['Profession', 'Health', 'Skill', 'Item', 'Secret'];
+  if (perPlayer !== 5) {
+    $('status').textContent = 'Each player must receive 5 cards: 1 Profession, 1 Health, 1 Skill, 1 Item, and 1 Secret.';
     return;
   }
-  const deck = shuffle(cards).slice(0, count * perPlayer);
+  const pools = Object.fromEntries(categories.map(type => [type, shuffle(cards.filter(card => card.type.toLowerCase() === type.toLowerCase()))]));
+  const missing = categories.find(type => pools[type].length < count);
+  if (missing) {
+    $('status').textContent = `Need at least ${count} different ${missing} cards for ${count} players. Add more ${missing} cards to the list.`;
+    return;
+  }
   dealt = Array.from({length: count}, (_, i) => ({
     name: `Player ${i + 1}`,
-    cards: deck.slice(i * perPlayer, (i + 1) * perPlayer),
+    cards: categories.map(type => pools[type][i]),
     revealed: false
   }));
-  $('status').textContent = `Dealt ${count * perPlayer} unique cards to ${count} players.`;
+  $('status').textContent = `Each player has 1 Profession, 1 Health, 1 Skill, 1 Item, and 1 Secret. Each category card is unique across players in this round.`;
   renderPlayers();
 }
 
